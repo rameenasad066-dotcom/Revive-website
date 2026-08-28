@@ -1,0 +1,526 @@
+/* =========================================================
+   REVIVE ORGANISATION — SHARED DESIGN SYSTEM
+   ========================================================= */
+
+/* === 1. ROOT VARIABLES === */
+:root {
+  --teal-deep:    #0B3D3A;
+  --teal-deepest: #082722;
+  --teal-mid:     #14655F;
+  --teal-bright:  #2AA897;
+  --teal-pale:    #D8EDEA;
+  --cream:        #FAF9F4;
+
+  --mint-label:     #8fd6cb;
+  --body-on-dark:   #BFE0DC;
+  --footer-link:    #cfe6e1;
+  --footer-muted:   #9bc0bc;
+  --footer-faint:   #6f9793;
+
+  --font-display: 'Big Shoulders', sans-serif;
+  --font-body:    'Work Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --header-h: 84px;
+}
+
+/* === 2. RESET === */
+* , *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--teal-deep);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; cursor: pointer; }
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; }
+
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--teal-bright);
+  outline-offset: 2px;
+}
+
+/* === 3. IMAGE PLACEHOLDER SLOT === */
+.img-slot {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; height: 100%;
+  background: var(--teal-pale);
+  border: 2px dashed rgba(11, 61, 58, 0.35);
+  border-radius: inherit;
+  color: var(--teal-deep);
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  text-align: center;
+  padding: 12px;
+}
+.img-slot svg { opacity: .55; width: 32px; height: 32px; }
+
+/* === 3b. IMAGE CAROUSEL (crossfade, e.g. hero photo rotation) === */
+.carousel { position: relative; width: 100%; height: 100%; }
+.carousel-slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 900ms ease;
+  pointer-events: none;
+}
+.carousel-slide.active { opacity: 1; pointer-events: auto; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slide { transition: none; }
+}
+
+/* === 4. SITE HEADER / NAV === */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--cream);
+  border-bottom: 1px solid rgba(11, 61, 58, 0.10);
+}
+.nav-bar {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: var(--header-h);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.brand {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.brand-mark {
+  height: 76px; width: auto;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand-mark img { height: 100%; width: auto; object-fit: contain; display: block; }
+
+.main-nav { display: none; }
+.main-nav ul { display: flex; align-items: center; gap: 30px; }
+.main-nav a {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--teal-deep);
+  position: relative;
+  padding: 6px 0;
+}
+.main-nav a::after {
+  content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+  background: var(--teal-bright); transition: width .22s ease;
+}
+.main-nav a:hover { color: var(--teal-bright); }
+.main-nav a:hover::after, .main-nav a.active::after { width: 100%; }
+.main-nav a.active { color: var(--teal-bright); }
+
+.nav-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+
+.btn-donate {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--teal-bright);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(42, 168, 151, 0.35);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  white-space: nowrap;
+}
+.btn-donate:hover { background: var(--teal-deep); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(11, 61, 58, 0.35); }
+.btn-donate.btn-block { width: 100%; padding: 16px 28px; font-size: 14px; }
+
+.hamburger {
+  display: flex; flex-direction: column; justify-content: center; gap: 5px;
+  width: 40px; height: 40px;
+  background: none; border: none; padding: 0;
+}
+.hamburger span { width: 24px; height: 2px; background: var(--teal-deep); border-radius: 2px; margin: 0 auto; transition: transform .25s ease, opacity .25s ease; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+@media (min-width: 960px) {
+  .main-nav { display: block; }
+  .hamburger { display: none; }
+}
+
+/* === 5. MOBILE NAV OVERLAY (position:fixed, independent of header's sticky box) === */
+.mobile-nav-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(8, 39, 34, 0.45);
+  z-index: 190;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+.mobile-nav-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.mobile-nav-panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(320px, 84vw);
+  background: var(--cream);
+  z-index: 200;
+  padding: 28px 28px 32px;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .3s ease;
+  box-shadow: -12px 0 32px rgba(8, 39, 34, 0.18);
+}
+.mobile-nav-panel.open { transform: translateX(0); }
+
+.mobile-nav-close {
+  align-self: flex-end;
+  background: none; border: none;
+  width: 36px; height: 36px;
+  font-family: var(--font-body); font-size: 22px; color: var(--teal-deep);
+  margin-bottom: 20px;
+}
+.mobile-nav-panel nav ul { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
+.mobile-nav-panel nav a {
+  display: block; padding: 14px 4px;
+  font-family: var(--font-display); font-weight: 700; font-size: 22px; text-transform: uppercase;
+  color: var(--teal-deep);
+  border-bottom: 1px solid rgba(11, 61, 58, 0.10);
+}
+.mobile-nav-panel nav a.active { color: var(--teal-bright); }
+
+@media (min-width: 960px) {
+  .mobile-nav-backdrop, .mobile-nav-panel { display: none; }
+}
+
+/* === 6. FOOTER === */
+.site-footer {
+  width: 100%;
+  background: var(--teal-deepest);
+  padding: 72px 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.site-footer::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(250, 249, 244, 0.05) 1.5px, transparent 0);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+.footer-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+.footer-top {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(250, 249, 244, 0.15);
+}
+.footer-brand { max-width: 320px; }
+.footer-brand-name {
+  font-family: var(--font-display); font-weight: 800; color: var(--cream);
+  font-size: 26px; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 12px;
+}
+.footer-brand p { color: var(--footer-muted); font-size: 14px; line-height: 1.6; margin: 0; }
+
+.footer-col-label {
+  font-family: var(--font-mono); color: var(--mint-label);
+  font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px;
+}
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a, .footer-links div { font-family: var(--font-body); color: var(--footer-link); font-size: 15px; }
+.footer-links a:hover { color: var(--cream); }
+
+.footer-social { display: flex; gap: 14px; }
+.footer-social a {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid rgba(250, 249, 244, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 12px; color: var(--footer-link);
+}
+.footer-social a:hover { background: var(--teal-bright); border-color: var(--teal-bright); color: var(--teal-deepest); }
+
+.footer-bottom {
+  padding-top: 28px;
+  font-family: var(--font-mono); color: var(--footer-faint);
+  font-size: 12px; letter-spacing: 0.05em;
+}
+
+/* === 7. PLACEHOLDER PAGE (new routes, content not built yet) === */
+.placeholder-page {
+  min-height: calc(100vh - var(--header-h) - 260px);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 90px 40px;
+  background: var(--teal-pale);
+}
+.placeholder-page .eyebrow {
+  font-family: var(--font-mono); color: var(--teal-mid);
+  font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 18px;
+}
+.placeholder-page h1 {
+  font-family: var(--font-display); font-weight: 900; color: var(--teal-deep);
+  font-size: clamp(40px, 7vw, 64px); text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 18px;
+}
+.placeholder-page p {
+  font-family: var(--font-body); color: var(--teal-mid); font-size: 18px; max-width: 480px; margin: 0 auto 30px;
+}
+.placeholder-page .btn-donate { display: inline-flex; }
+
+/* === 8. HOMEPAGE SECTIONS — RESPONSIVE HORIZONTAL PADDING ===
+   Sections keep their (varying) top/bottom padding inline but
+   defer left/right padding to this class so it can scale down
+   on small screens — inline styles can't respond to media queries. */
+.pg-section { padding-left: 20px; padding-right: 20px; }
+@media (min-width: 640px) { .pg-section { padding-left: 40px; padding-right: 40px; } }
+@media (min-width: 900px) { .pg-section { padding-left: 80px; padding-right: 80px; } }
+
+/* === 9. THREE VERTICALS — scroll-reveal + mobile stacking ===
+   Cards slide horizontally out from the center timeline with a
+   blur-to-sharp effect, triggered by IntersectionObserver in
+   index.html. Replays every time the section is scrolled past. */
+.vt-card {
+  will-change: transform, opacity, filter;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card {
+  transform: translateX(80px) scale(0.92);
+  opacity: 0;
+  filter: blur(8px);
+}
+.vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card {
+  transform: translateX(-80px) scale(0.92);
+  opacity: 0;
+  filter: blur(8px);
+}
+.vt-row.vt-visible .vt-card {
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vt-card { transition: none; }
+  .vt-row[data-vt-side]:not(.vt-visible) .vt-card {
+    transform: none; opacity: 1; filter: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .vt-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+  .vt-spacer { display: none !important; }
+  .vt-align-right { text-align: left !important; }
+  .vt-card { max-width: none !important; width: 100%; }
+  .vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card,
+  .vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card {
+    transform: translateY(30px) scale(0.95);
+  }
+}
+
+/* === 10. IMPACT NUMBERS — responsive gap === */
+.impact-row { gap: 48px; }
+@media (min-width: 640px) { .impact-row { gap: 100px; } }
+
+/* === 11. RESPONSIVE (typography & flex min-widths) === */
+@media (max-width: 640px) {
+  .nav-bar { padding: 0 20px; }
+  .btn-donate { padding: 11px 20px; font-size: 12px; }
+  .site-footer { padding-left: 20px; padding-right: 20px; }
+}
+
+/* === 12. GENERIC SCROLL-REVEAL ===
+   Site-wide reusable entrance animation, same blur-to-sharp
+   language as the homepage's Three Verticals cards. Any element
+   with [data-reveal] starts hidden and animates in the first
+   time (or every time, per js/scroll-reveal.js) it scrolls into
+   view — no left/right assignment, just a upward slide. */
+[data-reveal] {
+  will-change: transform, opacity, filter;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal]:not(.reveal-visible) {
+  transform: translateY(40px) scale(0.95);
+  opacity: 0;
+  filter: blur(8px);
+}
+[data-reveal].reveal-visible {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { transition: none; }
+  [data-reveal]:not(.reveal-visible) { transform: none; opacity: 1; filter: none; }
+}
+
+/* Bar-chart variant: bars grow up from the baseline instead of
+   blur-fading in — overrides the generic transform/filter above
+   via the extra .bar-grow class (higher specificity). */
+[data-reveal].bar-grow {
+  transform-origin: bottom;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal].bar-grow:not(.reveal-visible) {
+  transform: scaleY(0);
+  opacity: 1;
+  filter: none;
+}
+[data-reveal].bar-grow.reveal-visible {
+  transform: scaleY(1);
+  opacity: 1;
+  filter: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal].bar-grow:not(.reveal-visible) { transform: scaleY(1); }
+}
+
+/* === 13. BENTO PHOTO GALLERY ===
+   Editorial mosaic: one large featured tile + three smaller ones,
+   each with a gradient caption and a hover zoom on the image only
+   (the tile itself doesn't move, so the caption stays put). Falls
+   back to a single stacked column on small screens. */
+.ph-gallery-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  height: 480px;
+}
+.ph-gallery-item--big { grid-column: 1; grid-row: 1 / 3; }
+.ph-gallery-item--tr1 { grid-column: 2; grid-row: 1; }
+.ph-gallery-item--tr2 { grid-column: 3; grid-row: 1; }
+.ph-gallery-item--wide { grid-column: 2 / 4; grid-row: 2; }
+
+.ph-gallery-item {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(11, 61, 58, 0.16);
+}
+.ph-gallery-item img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ph-gallery-item:hover img { transform: scale(1.08); }
+.ph-gallery-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 24px 18px 14px;
+  background: linear-gradient(to top, rgba(11, 61, 58, 0.88) 0%, rgba(11, 61, 58, 0) 100%);
+  color: #FAF9F4;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .ph-gallery-grid { grid-template-columns: 1fr; grid-template-rows: none; height: auto; }
+  .ph-gallery-item--big, .ph-gallery-item--tr1, .ph-gallery-item--tr2, .ph-gallery-item--wide {
+    grid-column: auto; grid-row: auto; aspect-ratio: 4 / 3;
+  }
+}
+
+/* === 14. ANNOUNCEMENT BAR ===
+   Thin scrolling marquee above the topnav, shown only when
+   window.CURRENT_EVENT (js/current-event.js) is active. Whole
+   bar is one link to the current event page. Two identical
+   .announce-item copies inside .announce-marquee, animated by
+   exactly -50% of the doubled track's width, is what makes the
+   loop seamless regardless of text length. */
+.announce-bar {
+  width: 100%;
+  background: var(--teal-bright);
+  overflow: hidden;
+}
+.announce-bar[hidden] { display: none; }
+.announce-link { display: block; text-decoration: none; }
+.announce-marquee {
+  display: flex;
+  width: max-content;
+  animation: announce-scroll 22s linear infinite;
+}
+.announce-link:hover .announce-marquee { animation-play-state: paused; }
+.announce-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 40px;
+  gap: 10px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  flex-shrink: 0;
+}
+@keyframes announce-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .announce-marquee { animation: none; }
+}
+
+/* === 15. DONATE PAGE — COPY-TO-CLIPBOARD ROW === */
+.donate-copy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #FAF9F4;
+  border: 1px solid rgba(11, 61, 58, 0.15);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.donate-copy-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--teal-deep);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  word-break: break-all;
+}
+.donate-copy-btn {
+  flex-shrink: 0;
+  background: var(--teal-deep);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  min-width: 66px;
+}
+.donate-copy-btn:hover { background: var(--teal-bright); }
+
+@media (max-width: 460px) {
+  .donate-copy-row { flex-direction: column; align-items: stretch; }
+  .donate-copy-btn { width: 100%; padding: 13px 16px; }
+}
