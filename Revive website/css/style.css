@@ -178,7 +178,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 .mobile-nav-panel {
   position: fixed; top: 0; right: 0; bottom: 0;
-  width: min(320px, 84vw);
+  width: min(280px, 76vw);
   background: var(--cream);
   z-index: 200;
   padding: 28px 28px 32px;
@@ -198,8 +198,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 .mobile-nav-panel nav ul { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
 .mobile-nav-panel nav a {
-  display: block; padding: 14px 4px;
-  font-family: var(--font-display); font-weight: 700; font-size: 22px; text-transform: uppercase;
+  display: block; padding: 11px 4px;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase;
   color: var(--teal-deep);
   border-bottom: 1px solid rgba(11, 61, 58, 0.10);
 }
@@ -331,6 +331,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card {
     transform: translateY(30px) scale(0.95);
   }
+  /* "Right" rows put the spacer first in source order (spacer, circle,
+     card) for the desktop layout — stacked as flex-direction:column
+     that puts the numbered circle above its own card instead of below
+     it. Force the visual order back to card, then circle, on mobile. */
+  .vt-row[data-vt-side="right"] > *:nth-child(1) { order: 3; }
+  .vt-row[data-vt-side="right"] > *:nth-child(2) { order: 2; }
+  .vt-row[data-vt-side="right"] > *:nth-child(3) { order: 1; }
 }
 
 /* === 10. IMPACT NUMBERS — responsive gap === */
@@ -342,6 +349,22 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .nav-bar { padding: 0 20px; }
   .btn-donate { padding: 11px 20px; font-size: 12px; }
   .site-footer { padding-left: 20px; padding-right: 20px; }
+
+  /* Every page section sets its own generous desktop padding-top/
+     padding-bottom inline (often 90-130px). On a phone that turns
+     into a lot of scrolling for not much content per screen, which
+     reads as "everything feels too big / zoomed in." Force it down
+     site-wide — !important is required since inline styles would
+     otherwise win. */
+  section.pg-section { padding-top: 56px !important; padding-bottom: 56px !important; }
+
+  /* Timeline/card padding — same reasoning, applies to the Three
+     Verticals cards and the camp-timeline cards that reuse .vt-card. */
+  .vt-card { padding: 24px 22px !important; }
+
+  /* Every page's hero <h1> sets its own clamp() inline, with minimums
+     around 35-42px — oversized on a narrow phone. One shared cap. */
+  h1 { font-size: clamp(1.7rem, 8vw, 3rem) !important; line-height: 1.05 !important; }
 }
 
 /* === 12. GENERIC SCROLL-REVEAL ===
