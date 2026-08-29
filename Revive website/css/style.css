@@ -299,12 +299,18 @@ a:focus-visible, button:focus-visible, input:focus-visible {
               opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card {
+/* The :not([data-reveal]) guard matters: only the homepage ships the
+   inline script that adds .vt-visible. Timeline cards on other pages
+   reuse .vt-card but animate through the generic [data-reveal] system
+   (section 12) instead — without this guard they'd match the hidden
+   state here, which nothing on those pages ever clears, and stay
+   permanently invisible. */
+.vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card:not([data-reveal]) {
   transform: translateX(80px) scale(0.92);
   opacity: 0;
   filter: blur(8px);
 }
-.vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card {
+.vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card:not([data-reveal]) {
   transform: translateX(-80px) scale(0.92);
   opacity: 0;
   filter: blur(8px);
@@ -317,27 +323,37 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .vt-card { transition: none; }
-  .vt-row[data-vt-side]:not(.vt-visible) .vt-card {
+  .vt-row[data-vt-side]:not(.vt-visible) .vt-card:not([data-reveal]) {
     transform: none; opacity: 1; filter: none;
   }
 }
 
 @media (max-width: 760px) {
-  .vt-row { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+  .vt-row { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; margin-bottom: 32px !important; }
   .vt-spacer { display: none !important; }
   .vt-align-right { text-align: left !important; }
   .vt-card { max-width: none !important; width: 100%; }
-  .vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card,
-  .vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card {
+  .vt-row[data-vt-side="left"]:not(.vt-visible) .vt-card:not([data-reveal]),
+  .vt-row[data-vt-side="right"]:not(.vt-visible) .vt-card:not([data-reveal]) {
     transform: translateY(30px) scale(0.95);
   }
-  /* "Right" rows put the spacer first in source order (spacer, circle,
-     card) for the desktop layout — stacked as flex-direction:column
-     that puts the numbered circle above its own card instead of below
-     it. Force the visual order back to card, then circle, on mobile. */
+
+  /* The centre spine is a desktop device — it draws the zigzag between
+     left and right cards. Stacked single-column it just runs behind
+     full-width cards and pokes out through the gaps, so drop it and let
+     the numbered circles carry the sequence on their own. */
+  .vt-spine { display: none !important; }
+
+  /* Source order differs by side — left rows are (card, circle, spacer),
+     right rows are (spacer, circle, card) — so stacking them as-is gives
+     an inconsistent read where the number lands under the card it labels.
+     The circle is nth-child(2) on both sides: pull it above its own card
+     everywhere, so the column reads 01 → card, 02 → card. */
+  .vt-row[data-vt-side] > *:nth-child(2) { order: 1; align-self: center; }
+  .vt-row[data-vt-side="left"] > *:nth-child(1) { order: 2; }
+  .vt-row[data-vt-side="left"] > *:nth-child(3) { order: 3; }
   .vt-row[data-vt-side="right"] > *:nth-child(1) { order: 3; }
-  .vt-row[data-vt-side="right"] > *:nth-child(2) { order: 2; }
-  .vt-row[data-vt-side="right"] > *:nth-child(3) { order: 1; }
+  .vt-row[data-vt-side="right"] > *:nth-child(3) { order: 2; }
 }
 
 /* === 10. IMPACT NUMBERS — responsive gap === */
